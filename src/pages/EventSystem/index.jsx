@@ -22,7 +22,7 @@ export default class HomePage extends React.Component{
   getSortEvents(allEvents) {
     const sortEvents = {};
     allEvents.map((event) => {
-      const eventDate = new Date(event.event_start_time);
+      const eventDate = new Date(event.event_start_time*1000);
       const year = eventDate.getFullYear();
       const numMonth = eventDate.getMonth();
       const enMonth = this.monthNumberToString(numMonth);

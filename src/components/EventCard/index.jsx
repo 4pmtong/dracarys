@@ -6,7 +6,7 @@ import './index.scss';
 
 export default class EventCard extends React.Component {
   getEventMonth(timestamp) {
-    const eventTime = new Date(timestamp);
+    const eventTime = new Date(timestamp*1000);
     const numMonth = eventTime.getMonth();
     const enMonth = this.monthNumberToString(numMonth);
 
@@ -14,7 +14,7 @@ export default class EventCard extends React.Component {
   }
 
   getEventDate(timestamp) {
-    const eventTime = new Date(timestamp);
+    const eventTime = new Date(timestamp*1000);
     const day = eventTime.getDate();
 
     return day;
@@ -29,6 +29,7 @@ export default class EventCard extends React.Component {
   render() {
     const { event, onEdit, state } = this.props;
     const allMembers = event.num_of_registered + event.num_of_in_queue;
+    const leftMembers = event.quota - event.num_of_registered;
 
     return (
       <div className='event-card'>
@@ -57,17 +58,20 @@ export default class EventCard extends React.Component {
                 {`${allMembers} Members are interested`}
               </p>
               <p className='event-queue-info'>
-                {`${event.quota - event.num_of_registered} Spots left! (${event.lucky_quota} 🎉)`}
+                {`${leftMembers > 0 ? leftMembers : 0} Spots left!`}
+              </p>
+              <p className='event-lucky-info'>
+                {`${event.lucky_quota} Lucky Draw Chances 🎉`}
               </p>
             </div>
           </div>
-
-          <a className='event-button' href={`/event/${event.eid}`} target='_blank' rel="noopener noreferrer">
-            <Button type="primary" block className='click-button'>
-              {this.props.button}
-            </Button>
-          </a>
         </div>
+
+        <a className='event-button' href={`/event?eid=${event.eid}`} target='_blank' rel="noopener noreferrer">
+          <Button type="primary" block className='click-button'>
+            {this.props.button}
+          </Button>
+        </a>
 
         <div className='action-list'>
           {onEdit && <div className='icon edit' onClick={() => { onEdit(event) }}><Icon type="form" /></div>}
