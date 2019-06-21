@@ -15,7 +15,6 @@ import {
   Col,
   Button,
   DatePicker,
-  TimePicker,
   Modal,
   InputNumber,
   notification,
@@ -33,6 +32,17 @@ const openNotificationWithIcon = (type, message, description) => {
   });
 };
 
+function getQueryVariable(variable)
+{
+       let query = window.location.search.substring(1);
+       let vars = query.split("&");
+       for (let i=0;i<vars.length;i++) {
+               let pair = vars[i].split("=");
+               if(pair[0] === variable){return pair[1];}
+       }
+       return(false);
+}
+
 class RegistrationForm extends React.Component {
   state = {
     isPreview: false,
@@ -40,8 +50,8 @@ class RegistrationForm extends React.Component {
   };
 
   componentDidMount() {
-    if(window.localStorage.getItem('eid')) {
-      const eid = Number(window.localStorage.getItem('eid'));
+    const eid = getQueryVariable('eid');
+    if(eid) {
       Store.getEventDetail(eid).then((data) => {
         if(!data.message) {
           this.props.form.setFieldsValue({
@@ -79,19 +89,17 @@ class RegistrationForm extends React.Component {
           apply_start_time: moment(values.applyTime[0]).unix(),
           apply_end_time:moment(values.applyTime[0]).unix(),
         }).then((data) => {
-          window.localStorage.removeItem('eid');
           // TODO: Jump to edit page
         }).catch(err => {
-          openNotificationWithIcon('error', `Failed to create event ${window.localStorage.getItem('eid')}`, err);
+          openNotificationWithIcon('error', `Failed to create event ${values.name}`, err);
         });
       }
     });
   };
 
   onBack = e => {
-    // goback
+    // TODO: goback
     window.location.href = '/';
-    window.localStorage.removeItem('eid');
   }
 
 
@@ -99,12 +107,10 @@ class RegistrationForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
 
-    const dateConfig = {
-      rules: [{ type: 'object', required: true, message: 'Please select time!' }],
-    };
-
-    const rangeConfig = {
-      rules: [{ type: 'array', required: true, message: 'Your event need to have a time!' }],
+    const rangeConfig = (message) => {
+      return {
+        rules: [{ type: 'array', required: true, message: message }],
+      }
     };
 
     const formItemLayout = {
@@ -163,8 +169,8 @@ class RegistrationForm extends React.Component {
           <Form.Item
             label="Event Time"
           >
-            {getFieldDecorator('eventTime', rangeConfig)(
-              <RangePicker className="dateTimePicker" showTime format="YYYY-MM-DD HH:mm:ss" placeholder={['Start Time', 'End Time']} />,
+            {getFieldDecorator('eventTime', rangeConfig('Your event need to have a date-time'))(
+              <RangePicker className="dateTimePicker" showTime format="DD-MM-YYYY HH:mm:ss" placeholder={['Start Time', 'End Time']} />,
             )}
           </Form.Item>
           {/* Event Location */}
@@ -321,14 +327,14 @@ Example: <b>bold</b> event information`} autosize />)}
           <Form.Item
             label="Application Time"
           >
-            {getFieldDecorator('applyTime', rangeConfig)(
-              <RangePicker className="dateTimePicker" showTime format="YYYY-MM-DD HH:mm:ss" placeholder={['Start Time', 'End Time']} />,
+            {getFieldDecorator('applyTime', rangeConfig('Your event need to have a time for people to register!'))(
+              <RangePicker className="dateTimePicker" showTime format="DD-MM-YYYY HH:mm:ss" placeholder={['Start Time', 'End Time']} />,
             )}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <div className="buttonsBottom">
               {
-                this.state.eid ? (
+                this.state.eid > 0 ? (
                   [(
                     <Button
                       key="save"
@@ -362,7 +368,6 @@ Example: <b>bold</b> event information`} autosize />)}
                         e.preventDefault();
                         Store.deleteEvent(this.state.eid).then((data) => {
                           openNotificationWithIcon('success', `Event deleted.`, '');
-                          window.localStorage.removeItem('eid');
                           // TODO: Jump to edit page
                         }).catch(err => {
                           openNotificationWithIcon('error', `Failed to delete event`, err);
