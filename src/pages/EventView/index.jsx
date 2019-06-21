@@ -205,7 +205,7 @@ class EventPage extends React.Component {
                 {(() => {
                   const today = moment(new Date());
                   console.log(apply_start_date_time, today)
-                  if (apply_end_date_time && apply_start_date_time.diff(today) < 0) {
+                  if (apply_end_date_time && apply_end_date_time.diff(today) < 0) {
                     return (
                       <React.Fragment>
                         Application <b>ended on <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
@@ -230,10 +230,10 @@ class EventPage extends React.Component {
               {
                 event.quota > 1 && (
                   <Row style={{ alignItems: 'center', display: 'flex', marginTop: 5 }}>
-                    Pax ( including yourself )
+                    Pax ( including yourself - Max {event.quota} )
                     <div style={{ width: 5 }} />
                     <InputNumber disabled={this.state.button.disabled} defaultValue={this.state.pax} value={this.state.pax} onChange={(value) => {
-                      if(value > 0) {
+                      if(value > 0 && value <= event.quota) {
                         this.setState({
                           pax: value,
                         });
