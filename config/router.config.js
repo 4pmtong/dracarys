@@ -28,12 +28,12 @@ export default [
     path: '/',
     component: '../layouts/BasicLayout',
     routes: [
-      // dashboard
-      { path: '/', redirect: '/dashboard' },
+      // eventsystem
+      { path: '/', redirect: '/eventsystem' },
       {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: './Dashboard',
+        path: '/eventsystem',
+        name: 'eventsystem',
+        component: './Eventsystem',
       },
       {
         path: '/404',
