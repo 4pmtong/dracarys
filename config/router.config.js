@@ -33,7 +33,7 @@ export default [
       {
         path: '/eventsystem',
         name: 'eventsystem',
-        component: './Eventsystem',
+        component: './EventSystem',
       },
       {
         path: '/404',

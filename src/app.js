@@ -3,6 +3,8 @@
  * https://umijs.org/zh/guide/runtime-config.html#%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F
  */
 
+ import 'antd/dist/antd.css'
+
 // 运行时提示错误信息
 export const dva = {
   config: {

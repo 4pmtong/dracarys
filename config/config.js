@@ -11,7 +11,7 @@ const plugins = [
       webpackChunkName: true,
       // loadingComponent: './components/PageLoading/index',
     },
-    title: 'umi-project-app',
+    title: 'Dractarys',
     dll: true,
     locale: {
       enable: true,

@@ -1,14 +1,38 @@
-// .header {
-//   font-family: Georgia, sans-serif;
-//   text-align: center;
+.layout-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 
-//   .title {
-//     font-size: 2.5rem;
-//     font-weight: normal;
-//     letter-spacing: -1px;
-//     background: darkslateblue;
-//     padding: .6em 0;
-//     color: white;
-//     margin: 0;
-//   }
-// }
+  .layout-header {
+    height: 80px;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    min-width: 1200px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    // background-color: #1890ff;
+    color: #fff;
+    box-sizing: border-box;
+
+    .logo {
+      margin: 0;
+      flex: 1;
+      color: #fff;
+    }
+
+    .user {
+      line-height: 30px;
+    }
+  }
+
+  .layout-content {
+    flex: 1;
+    padding-top: 80px;
+  }
+
+  .layout-footer {
+    text-align: center;
+  }
+}
