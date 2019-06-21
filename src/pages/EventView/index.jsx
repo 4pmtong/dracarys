@@ -44,8 +44,9 @@ class EventPage extends React.Component {
 
   render() {
     const { event } = this.state;
-    const event_start_date_time = event.event_start_time && moment(event.event_start_time) || new moment(1561124772);
-    const event_end_date_time = event.event_end_time && moment(event.event_end_time);
+    const event_start_date_time = event.event_start_time && moment.unix(event.event_start_time);
+    const event_end_date_time = event.event_end_time && moment.unix(event.event_end_time);
+    const application_end_date_time = event.application_end_time && moment.unix(event.application_end_time);
     return (
       <div>
         <Row gutter={12}>
@@ -92,6 +93,9 @@ class EventPage extends React.Component {
                     })()}
                   </div>
                 </Col>
+              </Row>
+              <Row>
+                Application <b>before {application_end_date_time && application_end_date_time.format('DD/MM/YYYY hh:mm A')}</b>
               </Row>
             </div>
           </Col>

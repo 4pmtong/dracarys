@@ -44,10 +44,12 @@ class RegistrationForm extends React.Component {
     if(eid) {
       Store.getEventDetail(eid).then((data) => {
         if(!data.message) {
+          console.log(data.data)
+
           this.props.form.setFieldsValue({
             ...pick(data.data, submitValues),
-            eventTime: [moment(data.data.event_start_time), moment(data.data.event_end_time)],
-            applyTime: [moment(data.data.apply_start_time), moment(data.data.apply_end_time)]
+            eventTime: [moment.unix(data.data.event_start_time), moment.unix(data.data.event_end_time)],
+            applyTime: [moment.unix(data.data.apply_start_time), moment.unix(data.data.apply_end_time)]
           });
           this.setState({
             eid: eid,
