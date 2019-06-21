@@ -1,6 +1,10 @@
 import React from 'react';
 import sanitizeHtml from 'sanitize-html';
+import moment from 'moment';
+import { pick } from 'lodash';
 import './index.scss';
+import Store from '../../../../../API/httpCall';
+
 
 import {
   Form,
@@ -11,32 +15,102 @@ import {
   Col,
   Button,
   DatePicker,
-  TimePicker,
-  Modal
+  Modal,
+  InputNumber,
+  notification,
 } from 'antd';
 
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 
+const submitValues = ['name', 'abstract', 'intro', 'event_start_time', 'event_end_time', 'apply_start_time', 'apply_end_time', 'quota', 'lucky_quota', 'venue', 'contact', 'contact_email', 'image_url']
+
+const openNotificationWithIcon = (type, message, description) => {
+  notification[type]({
+    message: message,
+    description: description,
+  });
+};
+
+function getQueryVariable(variable)
+{
+       let query = window.location.search.substring(1);
+       let vars = query.split("&");
+       for (let i=0;i<vars.length;i++) {
+               let pair = vars[i].split("=");
+               if(pair[0] === variable){return pair[1];}
+       }
+       return(false);
+}
+
 class RegistrationForm extends React.Component {
   state = {
     isPreview: false,
+    eid: -1,
   };
+
+  componentDidMount() {
+    const eid = getQueryVariable('eid');
+    if(eid) {
+      Store.getEventDetail(eid).then((data) => {
+        if(!data.message) {
+          this.props.form.setFieldsValue({
+            ...pick(data.data, submitValues),
+            eventTime: [moment(data.data.event_start_time), moment(data.data.event_end_time)],
+            applyTime: [moment(data.data.apply_start_time), moment(data.data.apply_end_time)]
+          });
+          this.setState({
+            eid: eid,
+          });
+        } else {
+          openNotificationWithIcon('error', `Failed to fetch event ${eid}`, data.message);
+        }
+      }).catch(err => {
+        openNotificationWithIcon('error', `Failed to fetch event ${eid}`, err);
+      })
+    }
+  }
+
+  componentWillUnmount() {
+
+  }
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        Store.createEvent({
+          ...pick(values, submitValues),
+          ...!values.quota && { quota: 0 },
+          ...!values.lucky_quota && { lucky_quota: 0 },
+          ...!values.image_url && { image_url: '' },
+          event_start_time: moment(values.eventTime[0]).unix(),
+          event_end_time: moment(values.eventTime[0]).unix(),
+          apply_start_time: moment(values.applyTime[0]).unix(),
+          apply_end_time:moment(values.applyTime[0]).unix(),
+        }).then((data) => {
+          // TODO: Jump to edit page
+        }).catch(err => {
+          openNotificationWithIcon('error', `Failed to create event ${values.name}`, err);
+        });
       }
     });
   };
 
+  onBack = e => {
+    // TODO: goback
+    window.location.href = '/';
+  }
+
+
+
   render() {
     const { getFieldDecorator } = this.props.form;
 
-    const config = {
-      rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+    const rangeConfig = (message) => {
+      return {
+        rules: [{ type: 'array', required: true, message: message }],
+      }
     };
 
     const formItemLayout = {
@@ -61,11 +135,20 @@ class RegistrationForm extends React.Component {
         },
       },
     };
-    const rowGutter = 0;
     const colSpan = 12;
-
     return (
       <React.Fragment>
+        <div className="eventsTitle">
+          <div
+            className="backButton"
+            onClick={this.onBack}
+            onKeyPress={this.onBack}
+            role="button"
+            tabIndex={0}
+          ><Icon type="left" /></div>
+          Back to Event Status
+        </div>
+        <div style={{ height: 60 }} />
         {/* name */}
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
           <Form.Item
@@ -76,10 +159,79 @@ class RegistrationForm extends React.Component {
               rules: [
                 {
                   required: true,
-                  message: 'Please enter a title!',
+                  message: 'You have to give your event a name!',
                 },
               ],
-            })(<Input placeholder="E.g Shopee Xplores! City Cycling" />)}
+            })(<Input placeholder="Give your event a cool name!" />)}
+            </Col>
+          </Form.Item>
+          {/* Event time */}
+          <Form.Item
+            label="Event Time"
+          >
+            {getFieldDecorator('eventTime', rangeConfig('Your event need to have a date-time'))(
+              <RangePicker className="dateTimePicker" showTime format="DD-MM-YYYY HH:mm:ss" placeholder={['Start Time', 'End Time']} />,
+            )}
+          </Form.Item>
+          {/* Event Location */}
+          <Form.Item
+            label="Location"
+          >
+            <Col span={colSpan}>
+            {getFieldDecorator('venue', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Everyone needs to know where is your event!',
+                },
+              ],
+            })(<Input placeholder="Specify your event address here" />)}
+            </Col>
+          </Form.Item>
+          {/* event capacity */}
+          <Form.Item
+            label={
+              <span>
+                Event Capacity&nbsp;
+                <Tooltip title="Number of participants allowed excluding Lucky Quota">
+                  <Icon type="question-circle-o" />
+                </Tooltip>
+              </span>
+            }
+          >
+            <Col span={colSpan}>
+            {getFieldDecorator('num_of_register', {
+              rules: [
+                {
+                  type: 'number',
+                  min: 0,
+                  message: 'Only numbers greater than 0 accepted!',
+                },
+              ],
+            })(<InputNumber placeholder="0" />)}
+            </Col>
+          </Form.Item>
+          {/* lucky quota */}
+          <Form.Item
+            label={
+              <span>
+                Lucky Quota&nbsp;
+                <Tooltip title="The number of slots for everyone in queue will have a chance to be picked to join the event.">
+                  <Icon type="question-circle-o" />
+                </Tooltip>
+              </span>
+            }
+          >
+            <Col span={colSpan}>
+            {getFieldDecorator('lucky_quota', {
+              rules: [
+                {
+                  type: 'number',
+                  min: 0,
+                  message: 'Only numbers greater than 0 accepted!',
+                },
+              ],
+            })(<InputNumber placeholder="0" />)}
             </Col>
           </Form.Item>
           {/* abstract */}
@@ -94,7 +246,7 @@ class RegistrationForm extends React.Component {
                   message: 'Please enter an abstract!',
                 },
               ],
-            })(<TextArea placeholder="E.g In the second part of the Shopee Xplores! series, we will embark on a scenic cycling trail from East Coast Park and stop by the wide, open space at Marina Barrage to fly kites!" autosize />)}
+            })(<TextArea placeholder="Enter an eye-catching abstract to entice participation!" autosize />)}
             </Col>
           </Form.Item>
           {/* Introduction */}
@@ -102,7 +254,7 @@ class RegistrationForm extends React.Component {
             label={
               <span>
                 Event Introduction&nbsp;
-                <Tooltip title="Display of information in HTML">
+                <Tooltip title="Enter HTML display for your event.">
                   <Icon type="question-circle-o" />
                 </Tooltip>
               </span>
@@ -110,20 +262,15 @@ class RegistrationForm extends React.Component {
           >
             <Row gutter={8}>
             <Col span={colSpan}>
-            {getFieldDecorator('introduction', {
+            {getFieldDecorator('intro', {
               rules: [
                 {
                   required: true,
                   message: 'Please enter your event introduction!',
                 },
               ],
-            })(<TextArea placeholder={`E.g Hi everyone,
-
-Wondering what to do on a Saturday morning? How about getting up to explore a part of this sunny island on two wheels?
-
-In the second part of the Shopee Xplores! series, we will embark on a scenic cycling trail from East Coast Park and stop by the wide, open space at Marina Barrage to fly kites! You will zoom past beaches, jetties, the Singapore Flyer, Marina Barrage and the Flower Dome - making this a wholesome and leisurely ride to get your cardio in all while catching up with old friends and new.
-
-Come along to enjoy the fun!`} autosize />)}
+            })(<TextArea placeholder={`Tell more details about your event
+Example: <b>bold</b> event information`} autosize />)}
             </Col>
             <Col span={colSpan}>
               <Button
@@ -138,20 +285,108 @@ Come along to enjoy the fun!`} autosize />)}
             </Col>
             </Row>
           </Form.Item>
-          {/* Event start time */}
+          {/* Organizer */}
           <Form.Item
-            label="Event Start Time"
+            label="Organizer"
           >
-            {getFieldDecorator('date-time-picker', config)(
-              <DatePicker className="dateTimePicker" showTime format="YYYY-MM-DD HH:mm:ss" />,
+            <Col span={colSpan}>
+            {getFieldDecorator('contact', {
+              rules: [
+                {
+                  required: true,
+                  message: 'You have to give a PIC name!',
+                },
+              ],
+            })(<Input placeholder="Who's organizing this event?" />)}
+            </Col>
+          </Form.Item>
+          {/* Organizer Content */}
+          <Form.Item
+            label="Organizer Contact"
+          >
+            <Col span={colSpan}>
+            {getFieldDecorator('contact_email', {
+              rules: [
+                {
+                  required: true,
+                  message: 'You have to give a PIC email!',
+                },
+              ],
+            })(<Input placeholder="How to contact you?" />)}
+            </Col>
+          </Form.Item>
+          {/* Event URL */}
+          <Form.Item
+            label="Event Image URL"
+          >
+            <Col span={colSpan}>
+            {getFieldDecorator('image_url')(<Input placeholder="Add an attractive image to attract participants" />)}
+            </Col>
+          </Form.Item>
+          {/* Event time */}
+          <Form.Item
+            label="Application Time"
+          >
+            {getFieldDecorator('applyTime', rangeConfig('Your event need to have a time for people to register!'))(
+              <RangePicker className="dateTimePicker" showTime format="DD-MM-YYYY HH:mm:ss" placeholder={['Start Time', 'End Time']} />,
             )}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
+            <div className="buttonsBottom">
+              {
+                this.state.eid > 0 ? (
+                  [(
+                    <Button
+                      key="save"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        this.props.form.validateFieldsAndScroll((err, values) => {
+                          if (!err) {
+                            Store.updateEvent(this.state.eid, {
+                              ...pick(values, submitValues),
+                              ...!values.quota && { quota: 0 },
+                              ...!values.lucky_quota && { lucky_quota: 0 },
+                              ...!values.image_url && { image_url: '' },
+                              event_start_time: moment(values.eventTime[0]).unix(),
+                              event_end_time: moment(values.eventTime[0]).unix(),
+                              apply_start_time: moment(values.applyTime[0]).unix(),
+                              apply_end_time:moment(values.applyTime[0]).unix(),
+                            }).then((data) => {
+                              openNotificationWithIcon('success', `Event ${values.name} updated.`, '');
+                            }).catch(err => {
+                              openNotificationWithIcon('error', `Failed to update event ${values.name}`, err);
+                            });
+                          }
+                        });
+                      }}
+                    >
+                      Save
+                    </Button>),(
+                    <Button
+                      key="delete"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        Store.deleteEvent(this.state.eid).then((data) => {
+                          openNotificationWithIcon('success', `Event deleted.`, '');
+                          // TODO: Jump to edit page
+                        }).catch(err => {
+                          openNotificationWithIcon('error', `Failed to delete event`, err);
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  )]
+                ) : (
+                  <Button type="primary" htmlType="submit">
+                    Launch your event
+                  </Button>
+                )
+              }
+            </div>
           </Form.Item>
         </Form>
+        {/* IGNORE */}
         <Modal
           title={`${this.props.form.getFieldValue('name') || 'Event'}'s Introduction Preview`}
           centered
@@ -164,7 +399,7 @@ Come along to enjoy the fun!`} autosize />)}
            ]}
         >
           {(() => {
-            const shaf = sanitizeHtml(this.props.form.getFieldValue('introduction'), {
+            const shaf = sanitizeHtml(this.props.form.getFieldValue('intro') || 'Nothing to Preview', {
               allowedTags: [
                 'h3',
                 'h4',
@@ -205,7 +440,7 @@ Come along to enjoy the fun!`} autosize />)}
                 font: ['color'],
                 div: ['style'],
                 img: ['src'],
-                a: ['href'],
+                a: ['href', 'target'],
                 span: ['style'],
                 table: ['style'],
                 col: ['width', 'height'],
@@ -215,6 +450,7 @@ Come along to enjoy the fun!`} autosize />)}
             return <div dangerouslySetInnerHTML={{ __html: shaf }} />;
           })()}
         </Modal>
+
       </React.Fragment>
     );
   }
