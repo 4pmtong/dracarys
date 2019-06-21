@@ -33,8 +33,6 @@ class EventPage extends React.Component {
       bgColor: '#02B2A9',
       disabled: false,
     },
-    statusMessage: '',
-    statusType: '',
     statusOn: false,
     pax: 1,
   }
@@ -244,7 +242,7 @@ class EventPage extends React.Component {
               }
               <Row className="blackFont">
                 {this.state.statusOn && (
-                  <Alert className="alert" message={(() => {
+                  <Alert closable className="alert" message={(() => {
                     switch(event.option) {
                       case 1:
                         return 'Event is not available for registration.';
@@ -255,7 +253,18 @@ class EventPage extends React.Component {
                       default:
                         return '';
                     }
-                  })()} type={this.state.statusType} showIcon />
+                  })()} type={(() => {
+                    switch(event.option) {
+                      case 1:
+                        return 'info';
+                      case 5:
+                        return 'success';
+                      case 6:
+                        return 'warning';
+                      default:
+                        return '';
+                    }
+                  })()} showIcon />
                 )}
                 <Button
                   className="submit"
