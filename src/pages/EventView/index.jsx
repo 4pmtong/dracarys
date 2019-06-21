@@ -14,6 +14,7 @@ import {
   Button,
   notification,
 } from 'antd';
+import { thisExpression } from '@babel/types';
 
 const openNotificationWithIcon = (type, message, description) => {
   notification[type]({
@@ -57,6 +58,40 @@ class EventPage extends React.Component {
     }
   }
 
+  // TODO: UID TO cookie
+  joinEvent() {
+    Store.joinEventByUid(this.state.event, this.state.eid, 1).then((data) => {
+      if(!data.message) {
+        console.log(data.data)
+        this.setState({
+          event: data.data,
+          button: this.getButtonState(data.data),
+        })
+      } else {
+        openNotificationWithIcon('error', `Failed to fetch event ${this.state.eid}`, data.message);
+      }
+    }).catch(err => {
+      openNotificationWithIcon('error', `Failed to fetch event ${this.state.eid}`, err);
+    });
+  }
+
+  cancelEvent() {
+    // TODO: uid
+    Store.deleteEventByUid(this.state.event, this.state.eid, 1).then((data) => {
+      if(!data.message) {
+        console.log(data.data)
+        this.setState({
+          event: data.data,
+          button: this.getButtonState(data.data),
+        })
+      } else {
+        openNotificationWithIcon('error', `Failed to fetch event ${this.state.eid}`, data.message);
+      }
+    }).catch(err => {
+      openNotificationWithIcon('error', `Failed to fetch event ${this.state.eid}`, err);
+    });
+  }
+
   getButtonState(event) {
     const button = {
       value: 'Join',
@@ -76,7 +111,7 @@ class EventPage extends React.Component {
         break;
       case 5:
         button.value = 'Cancel';
-        button.bgColor = '#02B2A9';
+        button.bgColor = '#EE4D2D';
         break;
       case 6:
         button.value = 'Cancel';
@@ -96,6 +131,9 @@ class EventPage extends React.Component {
     const event_start_date_time = event.event_start_time && moment.unix(event.event_start_time);
     const event_end_date_time = event.event_end_time && moment.unix(event.event_end_time);
     const apply_end_date_time = event.apply_end_time && moment.unix(event.apply_end_time);
+    const allMembers = event.num_of_registered + event.num_of_in_queue;
+    const leftMembers = event.quota - event.num_of_registered;
+
     return (
       <div>
         <Row gutter={12}>
@@ -145,10 +183,10 @@ class EventPage extends React.Component {
                   </div>
                   <div className="wrap-details">
                     <div className="event-details">
-                      {event.num_of_registered || 'xx'} Sailor{event.num_of_registered > 1 && 's'} are going
+                      {allMembers || 'xx'} Sailor{allMembers > 1 && 's'} are going
                     </div>
                     <div className="event-details-red">
-                      {event.event_availability || 'xx'} Spot{event.event_availability > 1 && 's'} left!
+                      {`${leftMembers > 0 ? leftMembers : 0}`} Spot{leftMembers > 1 && 's'} left!
                     </div>
                     {event.lucky_quota && (
                       <div className="event-details">
@@ -174,6 +212,15 @@ class EventPage extends React.Component {
                     color: '#fff',
                     backgroundColor: this.state.button.bgColor,
                     border: `1px solid ${this.state.button.bgColor}`
+                  }}
+                  onClick={() => {
+                    if (this.state.event.option === 1) return;
+
+                    if (this.state.event.option === 3 || this.state.event.option === 4) {
+                      this.joinEvent();
+                    } else if (this.state.event.option === 5 || this.state.event.option === 6) {
+                      this.cancelEvent();
+                    }
                   }}
                 >
                   {this.state.button.value}

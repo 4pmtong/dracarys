@@ -26,4 +26,12 @@ export default {
     method: 'DELETE',
   })),
   getEventDetailByUid: networkErrorType((eid, uid) => request(`/api/registry/user/${encodeURIComponent(uid)}/event/${encodeURIComponent(eid)}`)),
+  joinEventByUid: networkErrorType((body, eid, uid) => request(`/api/registry/user/${encodeURIComponent(uid)}/event/${encodeURIComponent(eid)}`, {
+    method: 'PUT',
+    body: JSON.stringify(body),
+  })),
+  deleteEventByUid: networkErrorType((body, eid, uid) => request(`/api/registry/user/${encodeURIComponent(uid)}/event/${encodeURIComponent(eid)}`, {
+    method: 'DELETE',
+    body: JSON.stringify(body),
+  })),
 };
