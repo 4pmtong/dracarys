@@ -104,6 +104,8 @@ class EventPage extends React.Component {
     switch (event.option) {
       case 1:
         button.disabled = true;
+        button.value = 'Regisration Unavailable';
+        button.bgColor = '#ddd';
         break;
       case 3:
         break;
@@ -132,6 +134,7 @@ class EventPage extends React.Component {
     const { event } = this.state;
     const event_start_date_time = event.event_start_time && moment.unix(event.event_start_time);
     const event_end_date_time = event.event_end_time && moment.unix(event.event_end_time);
+    const apply_start_date_time = event.apply_start_time && moment.unix(event.apply_start_time);
     const apply_end_date_time = event.apply_end_time && moment.unix(event.apply_end_time);
     const allMembers = event.num_of_registered + event.num_of_in_queue;
     const leftMembers = event.quota - event.num_of_registered;
@@ -199,14 +202,37 @@ class EventPage extends React.Component {
                 </Col>
               </Row>
               <Row className="blackFont">
-                Application <b>before <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
+                {(() => {
+                  const today = moment(new Date());
+                  console.log(apply_start_date_time, today)
+                  if (apply_end_date_time && apply_start_date_time.diff(today) < 0) {
+                    return (
+                      <React.Fragment>
+                        Application <b>ended on <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
+                      </React.Fragment>
+                    )
+                  } else if(apply_start_date_time && apply_start_date_time.diff(today) < 0) {
+                    return (
+                      <React.Fragment>
+                        Application <b>before <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
+                      </React.Fragment>
+                    )
+                  } else if(apply_start_date_time) {
+                    return (
+                      <React.Fragment>
+                        Application will <b>start at <u>{apply_start_date_time && apply_start_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
+                      </React.Fragment>
+                    )
+                  }
+                  return null;
+                })()}
               </Row>
               {
                 event.quota > 1 && (
                   <Row style={{ alignItems: 'center', display: 'flex', marginTop: 5 }}>
                     Pax ( including yourself )
                     <div style={{ width: 5 }} />
-                    <InputNumber defaultValue={this.state.pax} value={this.state.pax} onChange={(value) => {
+                    <InputNumber disabled={this.state.button.disabled} defaultValue={this.state.pax} value={this.state.pax} onChange={(value) => {
                       if(value > 0) {
                         this.setState({
                           pax: value,
@@ -218,7 +244,18 @@ class EventPage extends React.Component {
               }
               <Row className="blackFont">
                 {this.state.statusOn && (
-                  <Alert className="alert" message={this.state.statusMessage} type={this.state.statusType} showIcon />
+                  <Alert className="alert" message={(() => {
+                    switch(event.option) {
+                      case 1:
+                        return 'Event is not available for registration.';
+                      case 5:
+                        return 'You have successfully joined the event';
+                      case 6:
+                        return 'You are in the waiting list. We will notify you through email when there is slot.';
+                      default:
+                        return '';
+                    }
+                  })()} type={this.state.statusType} showIcon />
                 )}
                 <Button
                   className="submit"
