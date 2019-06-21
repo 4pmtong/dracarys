@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Table, Divider, Tag } from 'antd';
+import { Table } from 'antd';
 
 import dayjs from 'dayjs';
 
@@ -56,7 +56,7 @@ export default class EventUserList extends React.Component {
       staticUserList.push({
         name: `${item.firstname} ${item.lastname}`,
         email: item.email,
-        joinTime: `${dayjs(item.join_time).format('ddd, MMM DD')}`,
+        joinTime: `${dayjs(item.join_time).format('ddd, MMM DD hh:mm:s')}`,
         pax: item.pax,
         status: `${item.status === 1 ? 'Joined' : 'Queue'}`
       });
