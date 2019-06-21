@@ -76,9 +76,9 @@ class RegistrationForm extends React.Component {
           ...!values.pax && { pax: 0 },
           ...!values.image_url && { image_url: '' },
           event_start_time: moment(values.eventTime[0]).unix(),
-          event_end_time: moment(values.eventTime[0]).unix(),
+          event_end_time: moment(values.eventTime[1]).unix(),
           apply_start_time: moment(values.applyTime[0]).unix(),
-          apply_end_time:moment(values.applyTime[0]).unix(),
+          apply_end_time:moment(values.applyTime[1]).unix(),
         }).then((data) => {
           if(!data.message) {
             router.replace('/admin');
@@ -380,9 +380,9 @@ Example: <b>bold</b> event information`} autosize />)}
                               ...!values.lucky_quota && { lucky_quota: 0 },
                               ...!values.image_url && { image_url: '' },
                               event_start_time: moment(values.eventTime[0]).unix(),
-                              event_end_time: moment(values.eventTime[0]).unix(),
+                              event_end_time: moment(values.eventTime[1]).unix(),
                               apply_start_time: moment(values.applyTime[0]).unix(),
-                              apply_end_time:moment(values.applyTime[0]).unix(),
+                              apply_end_time:moment(values.applyTime[1]).unix(),
                             }).then((data) => {
                               if(data.message) {
                                 openNotificationWithIcon('error', `Failed to update event ${values.name}`, data.message);
