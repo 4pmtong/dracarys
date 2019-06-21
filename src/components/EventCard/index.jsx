@@ -55,13 +55,13 @@ export default class EventCard extends React.Component {
               </p>
 
               <p className='event-apply-info'>
-                {`${allMembers} Sailors are interested`}
+                {`${allMembers} Sailor${allMembers > 1 ? 's' : ''} are interested`}
               </p>
               <p className='event-queue-info'>
-                {`${leftMembers > 0 ? leftMembers : 0} Spots left!`}
+                {`${leftMembers > 0 ? leftMembers : 0} Spot${leftMembers > 1 ? 's' : ''} left!`}
               </p>
               <p className='event-lucky-info'>
-                {`${event.lucky_quota} Lucky Draw Chances 🎉`}
+                {`${event.lucky_quota} Lucky Draw Chance${event.lucky_quota > 1 ? 's' : ''} 🎉`}
               </p>
             </div>
           </div>
