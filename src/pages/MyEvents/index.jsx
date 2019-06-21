@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import EventCard from '../../components/EventCard';
+import { getUidByCookie } from '../../logic/getUidByCookie';
 
 import './index.scss';
 
@@ -23,7 +24,7 @@ export default class MyEventsPage extends React.Component{
       user: {
         name: 'Dracarys',
         // uid: '9527'
-        uid: '4'
+        uid: getUidByCookie(),
       },
       allEvents: []
     }

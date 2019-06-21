@@ -2,9 +2,15 @@ import React from 'react';
 import { Layout, Menu, Dropdown } from 'antd';
 import Link from 'umi/link';
 
+import { getUidByCookie } from '../logic/getUidByCookie';
+import Cookies from 'js-cookie';
+
 import './BasicLayout.scss';
 
 const { Header, Content, Footer } = Layout;
+
+const cookie_user_info = Cookies.get('user_info');
+const userInfo = !!cookie_user_info ? JSON.parse(cookie_user_info) : {};
 
 export default class BasicLayout extends React.Component {
   constructor(props) {
@@ -13,8 +19,8 @@ export default class BasicLayout extends React.Component {
     this.state = {
       logo: 'Event System',
       user: {
-        name: 'Dracarys',
-        uid: '9527'
+        name: userInfo.name || 'Dracrays',
+        uid: getUidByCookie(),
       },
       admin: {
         name: 'Dracarys',

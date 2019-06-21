@@ -2,6 +2,7 @@ import React from 'react';
 import './index.scss';
 import Store from '../../../API/httpCall';
 import getQueryVariable from '../../logic/urllogic.js';
+import { getUidByCookie } from '../../logic/getUidByCookie';
 import sanitizeHtml from 'sanitize-html';
 import moment from 'moment';
 
@@ -41,9 +42,9 @@ class EventPage extends React.Component {
 
   componentDidMount() {
     const eid = getQueryVariable('eid');
+    const uid = getUidByCookie();
     if(eid) {
-      // TODO: UID TO cookie
-      Store.getEventDetailByUid(eid, 1).then((data) => {
+      Store.getEventDetailByUid(eid, uid).then((data) => {
         if(!data.message) {
           console.log(data.data)
           this.setState({
@@ -60,9 +61,9 @@ class EventPage extends React.Component {
     }
   }
 
-  // TODO: UID TO cookie
   joinEvent() {
-    Store.joinEventByUid(this.state.event, this.state.eid, 1).then((data) => {
+    const uid = getUidByCookie();
+    Store.joinEventByUid(this.state.event, this.state.eid, uid).then((data) => {
       if(!data.message) {
         console.log(data.data)
         this.setState({
@@ -78,8 +79,8 @@ class EventPage extends React.Component {
   }
 
   cancelEvent() {
-    // TODO: uid
-    Store.deleteEventByUid(this.state.event, this.state.eid, 1).then((data) => {
+    const uid = getUidByCookie();
+    Store.deleteEventByUid(this.state.event, this.state.eid, uid).then((data) => {
       if(!data.message) {
         console.log(data.data)
         this.setState({
@@ -111,20 +112,20 @@ class EventPage extends React.Component {
         break;
       case 4:
         button.value = 'Queue';
-        button.bgColor = '#F7B500';
+        button.bgColor = '#f7b500';
         break;
       case 5:
         button.value = 'Cancel';
-        button.bgColor = '#EE4D2D';
+        button.bgColor = '#ee4d2d';
         break;
       case 6:
         button.value = 'Cancel';
-        button.bgColor = '#EE4D2D';
+        button.bgColor = '#ee4d2d';
         break;
       default:
         button.disabled = false;
         button.value = 'Join';
-        button.bgColor = '#02B2A9';
+        button.bgColor = '#02b2a9';
     }
 
     return button;

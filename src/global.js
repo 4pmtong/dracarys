@@ -38,7 +38,7 @@ const throttle = (fn, delay, atleast) => {
 if (window.addEventListener) {
   window.addEventListener('resize', throttle(() => {
     setHtmlFontSize();
-    console.log('resize=======');
+    // console.log('resize=======');
   }, 200), false);
 }
 
