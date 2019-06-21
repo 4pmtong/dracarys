@@ -4,6 +4,8 @@ import Store from '../../../API/httpCall';
 import getQueryVariable from '../../logic/urllogic.js';
 
 import {
+  Row,
+  Col,
   notification,
 } from 'antd';
 
@@ -42,9 +44,16 @@ class EventPage extends React.Component {
     const { event } = this.state;
     return (
       <div>
-        <div className='event-img'>
-          <img className='image' src={event.image_url} alt="event"/>
-        </div>
+        <Row>
+          <Col span={12} className="image-wrapper">
+            <img className='image' src={event.image_url} alt="event"/>
+          </Col>
+          <Col span={12} className="image-wrapper">
+            <div className="event-view-card-info">
+              Test
+            </div>
+          </Col>
+        </Row>
       </div>
     )
   }
