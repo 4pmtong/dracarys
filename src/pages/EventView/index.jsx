@@ -8,6 +8,7 @@ import moment from 'moment';
 import EventUserList from './components/EventUserList';
 
 import {
+  Alert,
   Row,
   Col,
   Button,
@@ -29,6 +30,9 @@ class EventPage extends React.Component {
       value: 'Join',
       bgColor: '#02B2A9'
     },
+    statusMessage: '',
+    statusType: '',
+    statusOn: false,
   }
 
   componentDidMount() {
@@ -100,6 +104,9 @@ class EventPage extends React.Component {
                       );
                     })()}
                   </div>
+                  <div className="event-location">
+                    {event.venue || 'XXX'}
+                  </div>
                   <div className="wrap-details">
                     <div className="event-details">
                       {event.num_of_registered || 'xx'} Sailor{event.num_of_registered && event.num_of_registered > 1 && 's'} are going
@@ -109,7 +116,7 @@ class EventPage extends React.Component {
                     </div>
                     {event.lucky_quota && (
                       <div className="event-details">
-                        {event.lucky_quota} Lucky Draw Chance{event.lucky_quota && event.lucky_quota > 1 && 's'}🎉
+                        {event.lucky_quota} Lucky Draw Chance{event.lucky_quota && event.lucky_quota > 1 && 's'} 🎉
                       </div>
                     )}
                   </div>
@@ -119,6 +126,9 @@ class EventPage extends React.Component {
                 Application <b>before <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
               </Row>
               <Row className="blackFont">
+                {this.state.statusOn && (
+                  <Alert className="alert" message={this.state.statusMessage} type={this.state.statusType} showIcon />
+                )}
                 <Button className="submit" block>{this.state.button.value}</Button>
               </Row>
             </div>
