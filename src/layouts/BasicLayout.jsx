@@ -11,7 +11,7 @@ export default class BasicLayout extends React.Component {
     super(props);
 
     this.state = {
-      logo: 'Event System',
+      logo: 'https://tharain.github.io/react-test-css/hackathonlogo.png',
       user: {
         name: 'Dracarys',
         uid: '9527'
@@ -54,7 +54,11 @@ export default class BasicLayout extends React.Component {
     return (
       <div className='layout-container'>
         <Header className='layout-header'>
-          <Link className='logo' to='/'>{this.state.logo}</Link>
+          <Link className='logo' to='/'><img className='image' style={{
+            width: 200,
+            marginLeft: -60,
+            marginTop: -10,
+          }} src={this.state.logo} alt="logo"/></Link>
           <Dropdown overlay={this.createMenu(this.state.headerMenu)}>
             <div className='user'>{this.state.user.name}</div>
           </Dropdown>

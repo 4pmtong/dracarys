@@ -35,6 +35,7 @@ class EventPage extends React.Component {
     },
     statusOn: false,
     pax: 1,
+    loaded: false,
   }
 
   componentDidMount() {
@@ -43,11 +44,11 @@ class EventPage extends React.Component {
       // TODO: UID TO cookie
       Store.getEventDetailByUid(eid, 1).then((data) => {
         if(!data.message) {
-          console.log(data.data)
           this.setState({
             event: data.data,
             eid: eid,
             button: this.getButtonState(data.data),
+            loaded: true,
           })
         } else {
           openNotificationWithIcon('error', `Failed to fetch event ${eid}`, data.message);
@@ -137,7 +138,7 @@ class EventPage extends React.Component {
     const allMembers = event.num_of_registered + event.num_of_in_queue;
     const leftMembers = event.quota - event.num_of_registered;
 
-    return (
+    return this.state.loaded && (
       <div>
         <Row gutter={12}>
           <Col span={12}>
