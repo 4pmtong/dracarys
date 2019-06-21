@@ -4,7 +4,7 @@ import moment from 'moment';
 import { pick } from 'lodash';
 import './index.scss';
 import Store from '../../../../../API/httpCall';
-
+import getQueryVariable from '../../../../logic/urllogic.js';
 
 import {
   Form,
@@ -23,7 +23,7 @@ import {
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 
-const submitValues = ['name', 'abstract', 'intro', 'event_start_time', 'event_end_time', 'apply_start_time', 'apply_end_time', 'quota', 'lucky_quota', 'venue', 'contact', 'contact_email', 'image_url']
+const submitValues = ['name', 'abstract', 'intro', 'event_start_time', 'event_end_time', 'apply_start_time', 'apply_end_time', 'quota', 'lucky_quota', 'venue', 'contact', 'contact_email', 'image_url', 'keyword']
 
 const openNotificationWithIcon = (type, message, description) => {
   notification[type]({
@@ -31,17 +31,6 @@ const openNotificationWithIcon = (type, message, description) => {
     description: description,
   });
 };
-
-function getQueryVariable(variable)
-{
-       let query = window.location.search.substring(1);
-       let vars = query.split("&");
-       for (let i=0;i<vars.length;i++) {
-               let pair = vars[i].split("=");
-               if(pair[0] === variable){return pair[1];}
-       }
-       return(false);
-}
 
 class RegistrationForm extends React.Component {
   state = {
@@ -321,6 +310,21 @@ Example: <b>bold</b> event information`} autosize />)}
           >
             <Col span={colSpan}>
             {getFieldDecorator('image_url')(<Input placeholder="Add an attractive image to attract participants" />)}
+            </Col>
+          </Form.Item>
+          {/* Category */}
+          <Form.Item
+            label="Category"
+          >
+            <Col span={colSpan}>
+            {getFieldDecorator('keyword', {
+              rules: [
+                {
+                  required: true,
+                  message: 'Give a category to your event',
+                },
+              ],
+            })(<Input placeholder="Eg. Family Day" />)}
             </Col>
           </Form.Item>
           {/* Event time */}

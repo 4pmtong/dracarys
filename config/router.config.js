@@ -55,6 +55,11 @@ export default [
         name: 'admin',
         component: './Admin',
       },
+      {
+        path: '/event',
+        name: 'event',
+        component: './EventView',
+      },
     ],
   },
 
