@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Button,
+  InputNumber,
   notification,
 } from 'antd';
 
@@ -34,6 +35,7 @@ class EventPage extends React.Component {
     statusMessage: '',
     statusType: '',
     statusOn: false,
+    pax: 1,
   }
 
   componentDidMount() {
@@ -161,6 +163,21 @@ class EventPage extends React.Component {
               <Row className="blackFont">
                 Application <b>before <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
               </Row>
+              {
+                event.quota > 1 && (
+                  <Row style={{ alignItems: 'center', display: 'flex', marginTop: 5 }}>
+                    Pax ( including yourself )
+                    <div style={{ width: 5 }} />
+                    <InputNumber defaultValue={this.state.pax} value={this.state.pax} onChange={(value) => {
+                      if(value > 0) {
+                        this.setState({
+                          pax: value,
+                        });
+                      }
+                    }} />
+                  </Row>
+                )
+              }
               <Row className="blackFont">
                 {this.state.statusOn && (
                   <Alert className="alert" message={this.state.statusMessage} type={this.state.statusType} showIcon />
@@ -250,6 +267,7 @@ class EventPage extends React.Component {
     )
   }
 }
+
 
 export default function() {
   return (
