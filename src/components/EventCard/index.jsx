@@ -55,7 +55,7 @@ export default class EventCard extends React.Component {
               </p>
 
               <p className='event-apply-info'>
-                {`${allMembers} Members are interested`}
+                {`${allMembers} Sailors are interested`}
               </p>
               <p className='event-queue-info'>
                 {`${leftMembers > 0 ? leftMembers : 0} Spots left!`}
