@@ -38,7 +38,9 @@ export default {
   // 路由配置
   routes: pageRoutes,
   proxy: {
-    '/api': 'http://localhost:9090',
+    // '/api': 'http://localhost:9090',
+    //'/api': 'http://10.2.203.47:5000',
+    '/api': 'http://10.22.67.52:5000',
   },
   // chainWebpack: webpackPlugin,
 }
