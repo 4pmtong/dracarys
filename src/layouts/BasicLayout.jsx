@@ -10,7 +10,7 @@ import './BasicLayout.scss';
 const { Header, Content, Footer } = Layout;
 
 const cookie_user_info = Cookies.get('user_info');
-const userInfo = !!cookie_user_info ? JSON.parse(cookie_user_info) : {};
+const userInfo = !!cookie_user_info ? JSON.parse(window.atob(cookie_user_info)) : {};
 
 export default class BasicLayout extends React.Component {
   constructor(props) {
