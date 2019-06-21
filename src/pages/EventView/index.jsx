@@ -2,11 +2,13 @@ import React from 'react';
 import './index.scss';
 import Store from '../../../API/httpCall';
 import getQueryVariable from '../../logic/urllogic.js';
+import sanitizeHtml from 'sanitize-html';
 import moment from 'moment';
 
 import {
   Row,
   Col,
+  Button,
   notification,
 } from 'antd';
 
@@ -91,22 +93,91 @@ class EventPage extends React.Component {
                       );
                     })()}
                   </div>
-                  <div className="event-details">
-                    {event.num_of_registered || 'xx'} Sailor{event.num_of_registered && event.num_of_registered > 1 && 's'} are going
-                  </div>
-                  <div className="event-details-red">
-                    {event.event_availability || 'xx'} Spot{event.event_availability && event.event_availability > 1 && 's'} left!
-                  </div>
-                  {event.lucky_quota && (
+                  <div className="wrap-details">
                     <div className="event-details">
-                      {event.lucky_quota} Lucky Draw Chance{event.lucky_quota && event.lucky_quota > 1 && 's'}
+                      {event.num_of_registered || 'xx'} Sailor{event.num_of_registered && event.num_of_registered > 1 && 's'} are going
                     </div>
-                  )}
+                    <div className="event-details-red">
+                      {event.event_availability || 'xx'} Spot{event.event_availability && event.event_availability > 1 && 's'} left!
+                    </div>
+                    {event.lucky_quota && (
+                      <div className="event-details">
+                        {event.lucky_quota} Lucky Draw Chance{event.lucky_quota && event.lucky_quota > 1 && 's'}
+                      </div>
+                    )}
+                  </div>
                 </Col>
               </Row>
               <Row className="blackFont">
                 Application <b>before <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
               </Row>
+              <Row className="blackFont">
+                <Button className="submit">Cancel</Button>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12} style={{ paddingLeft: '10%', paddingRight: '10%', width: '100%' }}>
+            <div className="event-sub-card-left-info">
+              <div className="event-sub-card-header">
+                About the Event
+              </div>
+              <div className="event-sub-card-pic">
+                Host: {event.contact || 'xxx'} | E-mail: {event.contact_email || 'xxx@xxx.com'}
+              </div>
+              <div className="gutter" />
+              {(() => {
+                const shaf = sanitizeHtml(event.intro || 'Nothing to Preview', {
+                  allowedTags: [
+                    'h3',
+                    'h4',
+                    'h5',
+                    'h6',
+                    'blockquote',
+                    'p',
+                    'a',
+                    'ul',
+                    'ol',
+                    'nl',
+                    'li',
+                    'b',
+                    'i',
+                    'strong',
+                    'span',
+                    'em',
+                    'strike',
+                    'code',
+                    'hr',
+                    'br',
+                    'div',
+                    'table',
+                    'thead',
+                    'caption',
+                    'tbody',
+                    'tr',
+                    'th',
+                    'td',
+                    'pre',
+                    'font',
+                    'font face',
+                    'col',
+                    'colgroup',
+
+                  ],
+                  allowedAttributes: {
+                    font: ['color'],
+                    div: ['style'],
+                    img: ['src'],
+                    a: ['href', 'target'],
+                    span: ['style'],
+                    table: ['style'],
+                    col: ['width', 'height'],
+                    td: ['style'],
+                  },
+                });
+                return <div style={{whiteSpace: 'pre-line', textAlign: 'justify'}} dangerouslySetInnerHTML={{ __html: shaf }} />;
+              })()}
             </div>
           </Col>
         </Row>
