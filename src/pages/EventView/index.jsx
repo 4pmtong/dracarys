@@ -109,14 +109,14 @@ class EventPage extends React.Component {
                   </div>
                   <div className="wrap-details">
                     <div className="event-details">
-                      {event.num_of_registered || 'xx'} Sailor{event.num_of_registered && event.num_of_registered > 1 && 's'} are going
+                      {event.num_of_registered || 'xx'} Sailor{event.num_of_registered > 1 && 's'} are going
                     </div>
                     <div className="event-details-red">
-                      {event.event_availability || 'xx'} Spot{event.event_availability && event.event_availability > 1 && 's'} left!
+                      {event.event_availability || 'xx'} Spot{event.event_availability > 1 && 's'} left!
                     </div>
                     {event.lucky_quota && (
                       <div className="event-details">
-                        {event.lucky_quota} Lucky Draw Chance{event.lucky_quota && event.lucky_quota > 1 && 's'} 🎉
+                        {event.lucky_quota} Lucky Draw Chance{event.lucky_quota > 1 && 's'} 🎉
                       </div>
                     )}
                   </div>

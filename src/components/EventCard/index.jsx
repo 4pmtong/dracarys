@@ -34,7 +34,7 @@ export default class EventCard extends React.Component {
     return (
       <div className='event-card'>
         <div className='event-img'>
-          <img className='image' src={event.image_url} alt="event"/>
+          <img className='image' src={event.image_url || 'https://cdn-images-1.medium.com/max/800/1*dE4F_nf8P60V2baaaOxgLQ.jpeg'} alt="event"/>
 
           <div className='event-keyword'>{event.keyword}</div>
         </div>
