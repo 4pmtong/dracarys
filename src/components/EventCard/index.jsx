@@ -65,13 +65,18 @@ export default class EventCard extends React.Component {
               </p>
             </div>
           </div>
-        </div>
 
-        <a className='event-button' href={`/event?eid=${event.eid}`} target='_blank' rel="noopener noreferrer">
-          <Button type="primary" block className='click-button'>
-            {this.props.button}
-          </Button>
-        </a>
+          <a
+            className='event-button'
+            href={`/event?eid=${event.eid}`}
+            target='_blank'
+            rel="noopener noreferrer"
+          >
+            <Button type="primary" block className='click-button'>
+              {this.props.button}
+            </Button>
+          </a>
+        </div>
 
         <div className='action-list'>
           {onEdit && <div className='icon edit' onClick={() => { onEdit(event) }}><Icon type="form" /></div>}

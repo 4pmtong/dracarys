@@ -63,7 +63,8 @@
     padding: 20px;
 
     .info-box {
-      min-height: 164px;
+      height: 235px;
+      overflow: hidden;
       box-sizing: border-box;
       padding: 10px 0 42px;
 
@@ -105,6 +106,15 @@
 
         .event-name {
           font-size: 20px;
+          // TODO:
+          height: 60px;
+          overflow: hidden;
+        }
+
+        .event-venue {
+          // TODO:
+          height: 42px;
+          overflow: hidden;
         }
 
         .event-apply-info {
@@ -126,17 +136,12 @@
         }
       }
     }
-  }
 
-  .event-button {
-    position: absolute;
-    width: calc(100% - 40px);
-    bottom: 20px;
-    left: 20px;
-
-    .click-button {
-      background-color: #02B2A9;
-      border-color: #02B2A9;
+    .event-button {
+      .click-button {
+        background-color: #02B2A9;
+        border-color: #02B2A9;
+      }
     }
   }
 

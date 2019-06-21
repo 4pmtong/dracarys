@@ -4,6 +4,8 @@ import Store from '../../../API/httpCall';
 import getQueryVariable from '../../logic/urllogic.js';
 import moment from 'moment';
 
+import EventUserList from './components/EventUserList';
+
 import {
   Row,
   Col,
@@ -117,6 +119,9 @@ class EventPage extends React.Component {
 
 export default function() {
   return (
-    <EventPage />
+    <>
+      <EventPage />
+      <EventUserList />
+    </>
   )
 }
