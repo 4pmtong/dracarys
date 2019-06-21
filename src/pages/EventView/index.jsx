@@ -28,7 +28,8 @@ class EventPage extends React.Component {
     event: {},
     button: {
       value: 'Join',
-      bgColor: '#02B2A9'
+      bgColor: '#02B2A9',
+      disabled: false,
     },
     statusMessage: '',
     statusType: '',
@@ -45,6 +46,7 @@ class EventPage extends React.Component {
           this.setState({
             event: data.data,
             eid: eid,
+            button: this.getButtonState(data.data),
           })
         } else {
           openNotificationWithIcon('error', `Failed to fetch event ${eid}`, data.message);
@@ -53,6 +55,40 @@ class EventPage extends React.Component {
         openNotificationWithIcon('error', `Failed to fetch event ${eid}`, err);
       })
     }
+  }
+
+  getButtonState(event) {
+    const button = {
+      value: 'Join',
+      bgColor: '#02B2A9',
+      disabled: false,
+    };
+
+    switch (event.option) {
+      case 1:
+        button.disabled = true;
+        break;
+      case 3:
+        break;
+      case 4:
+        button.value = 'Queue';
+        button.bgColor = '#F7B500';
+        break;
+      case 5:
+        button.value = 'Cancel';
+        button.bgColor = '#02B2A9';
+        break;
+      case 6:
+        button.value = 'Cancel';
+        button.bgColor = '#EE4D2D';
+        break;
+      default:
+        button.disabled = false;
+        button.value = 'Join';
+        button.bgColor = '#02B2A9';
+    }
+
+    return button;
   }
 
   render() {
@@ -129,7 +165,19 @@ class EventPage extends React.Component {
                 {this.state.statusOn && (
                   <Alert className="alert" message={this.state.statusMessage} type={this.state.statusType} showIcon />
                 )}
-                <Button className="submit" block>{this.state.button.value}</Button>
+                <Button
+                  className="submit"
+                  type="primary"
+                  block
+                  disabled={this.state.button.disabled}
+                  style={{
+                    color: '#fff',
+                    backgroundColor: this.state.button.bgColor,
+                    border: `1px solid ${this.state.button.bgColor}`
+                  }}
+                >
+                  {this.state.button.value}
+                </Button>
               </Row>
             </div>
           </Col>
