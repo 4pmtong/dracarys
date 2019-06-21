@@ -25,4 +25,5 @@ export default {
   deleteEvent: networkErrorType((eventId, body) => request(`/api/event/${encodeURIComponent(eventId)}`, {
     method: 'DELETE',
   })),
+  getEventDetailByUid: networkErrorType((eid, uid) => request(`/api/registry/user/${encodeURIComponent(uid)}/event/${encodeURIComponent(eid)}`)),
 };

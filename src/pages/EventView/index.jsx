@@ -25,12 +25,17 @@ class EventPage extends React.Component {
   state = {
     eid: -1,
     event: {},
+    button: {
+      value: 'Join',
+      bgColor: '#02B2A9'
+    },
   }
 
   componentDidMount() {
     const eid = getQueryVariable('eid');
     if(eid) {
-      Store.getEventDetail(eid).then((data) => {
+      // TODO: UID TO cookie
+      Store.getEventDetailByUid(eid, 1).then((data) => {
         if(!data.message) {
           console.log(data.data)
           this.setState({
@@ -114,7 +119,7 @@ class EventPage extends React.Component {
                 Application <b>before <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
               </Row>
               <Row className="blackFont">
-                <Button className="submit">Cancel</Button>
+                <Button className="submit" block>{this.state.button.value}</Button>
               </Row>
             </div>
           </Col>
