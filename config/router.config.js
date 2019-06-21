@@ -39,7 +39,12 @@ export default [
         path: '/404',
         name: '404',
         component: './Error/404'
-      }
+      },
+      {
+        path: '/events/form',
+        name: 'eventsForm',
+        component: './EventsForm',
+      },
     ],
   },
 
