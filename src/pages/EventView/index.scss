@@ -1,3 +1,13 @@
+.alert {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  bottom: 100%;
+  -webkit-box-shadow: 0 4px 12px 0px rgba(0,0,0,0.15);
+  -moz-box-shadow: 0 4px 12px 0px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px 0px rgba(0,0,0,0.15);
+}
+
 .big-date {
   color: rgba(0,0,0,0.85);
   font-size: 36px;

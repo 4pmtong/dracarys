@@ -8,6 +8,7 @@ import moment from 'moment';
 import EventUserList from './components/EventUserList';
 
 import {
+  Alert,
   Row,
   Col,
   Button,
@@ -25,6 +26,9 @@ class EventPage extends React.Component {
   state = {
     eid: -1,
     event: {},
+    statusMessage: '',
+    statusType: '',
+    statusOn: false,
   }
 
   componentDidMount() {
@@ -117,6 +121,9 @@ class EventPage extends React.Component {
                 Application <b>before <u>{apply_end_date_time && apply_end_date_time.format('DD/MM/YYYY hh:mm A') || 'xx/xx/xxxx xx:xx'}</u></b>
               </Row>
               <Row className="blackFont">
+                {this.state.statusOn && (
+                  <Alert className="alert" message={this.state.statusMessage} type={this.state.statusType} showIcon />
+                )}
                 <Button className="submit">Cancel</Button>
               </Row>
             </div>
