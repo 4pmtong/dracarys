@@ -2,6 +2,7 @@ import React from 'react';
 import sanitizeHtml from 'sanitize-html';
 import moment from 'moment';
 import { pick } from 'lodash';
+import router from 'umi/router';
 import './index.scss';
 import Store from '../../../../../API/httpCall';
 import getQueryVariable from '../../../../logic/urllogic.js';
@@ -79,6 +80,7 @@ class RegistrationForm extends React.Component {
           apply_end_time:moment(values.applyTime[0]).unix(),
         }).then((data) => {
           // TODO: Jump to edit page
+          router.replace('/admin');
         }).catch(err => {
           openNotificationWithIcon('error', `Failed to create event ${values.name}`, err);
         });
@@ -88,7 +90,8 @@ class RegistrationForm extends React.Component {
 
   onBack = e => {
     // TODO: goback
-    window.location.href = '/';
+    // window.location.href = '/';
+    router.replace('/admin');
   }
 
 
@@ -373,6 +376,7 @@ Example: <b>bold</b> event information`} autosize />)}
                         Store.deleteEvent(this.state.eid).then((data) => {
                           openNotificationWithIcon('success', `Event deleted.`, '');
                           // TODO: Jump to edit page
+                          router.replace('/admin');
                         }).catch(err => {
                           openNotificationWithIcon('error', `Failed to delete event`, err);
                         });
