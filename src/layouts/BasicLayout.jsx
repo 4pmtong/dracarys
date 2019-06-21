@@ -1,5 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Dropdown } from 'antd';
+import Link from 'umi/link';
 
 import './BasicLayout.scss';
 
@@ -21,15 +22,15 @@ export default class BasicLayout extends React.Component {
       },
       headerMenu: [
         {
-          value: 'my event',
-          link: '/user/9527'
+          value: 'my events',
+          link: '/myEvents'
         },
         {
           value: 'admin event',
-          link: '/admin/007'
+          link: '/admin'
         }
       ],
-      footerInfo: 'Dracarys@sHackathon Sea 2019'
+      footerInfo: 'Copyright 2019 Event System | Dracarys@Hackathon Sea 2019'
     };
   }
 
@@ -40,9 +41,7 @@ export default class BasicLayout extends React.Component {
           menuList && menuList.map((item, key) => {
             return (
               <Menu.Item key={key}>
-                <a href={item.link} target='_blank' rel="noopener noreferrer">
-                  {item.value}
-                </a>
+                <Link to={item.link}>{item.value}</Link>
               </Menu.Item>
             );
           })
@@ -55,7 +54,7 @@ export default class BasicLayout extends React.Component {
     return (
       <div className='layout-container'>
         <Header className='layout-header'>
-          <h1 className='logo'>{this.state.logo}</h1>
+          <Link className='logo' to='/'>{this.state.logo}</Link>
           <Dropdown overlay={this.createMenu(this.state.headerMenu)}>
             <div className='user'>{this.state.user.name}</div>
           </Dropdown>

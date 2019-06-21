@@ -5,6 +5,16 @@ import EventCard from '../../components/EventCard';
 
 import './index.scss';
 
+const userStates = {
+  '5': {
+    value: 'JOINED',
+    color: '#02B2A9',
+  },
+  '6': {
+    value: 'QUEUEING',
+    color: '#F7B500'
+  }
+}
 export default class MyEventsPage extends React.Component{
   constructor(props) {
     super(props);
@@ -12,7 +22,8 @@ export default class MyEventsPage extends React.Component{
     this.state = {
       user: {
         name: 'Dracarys',
-        uid: '9527'
+        // uid: '9527'
+        uid: '4'
       },
       allEvents: []
     }
@@ -42,6 +53,10 @@ export default class MyEventsPage extends React.Component{
       });
   }
 
+  getUserState(event) {
+    return userStates[event.option];
+  }
+
   render() {
     return (
       <div className='my-event-content'>
@@ -55,7 +70,7 @@ export default class MyEventsPage extends React.Component{
                   key={key}
                   event={event}
                   button='View Event'
-                  state={event.option}
+                  state={this.getUserState(event)}
                 />
               );
             })

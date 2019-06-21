@@ -28,7 +28,7 @@ export default class EventCard extends React.Component {
 
   render() {
     const { event, onEdit, state } = this.props;
-    const allMembers = event.num_of_register + event.num_of_in_queue;
+    const allMembers = event.num_of_registered + event.num_of_in_queue;
 
     return (
       <div className='event-card'>
@@ -54,10 +54,10 @@ export default class EventCard extends React.Component {
               </p>
 
               <p className='event-apply-info'>
-                {`${allMembers} Members are going`}
+                {`${allMembers} Members are interested`}
               </p>
               <p className='event-queue-info'>
-                {`${event.quota + event.lucky_quota - event.num_of_register} Spots left!`}
+                {`${event.quota - event.num_of_registered} Spots left! (${event.lucky_quota} 🎉)`}
               </p>
             </div>
           </div>
@@ -76,8 +76,8 @@ export default class EventCard extends React.Component {
 
         {
           !!state &&
-          <div className='event-state'>
-            <span className='state-tip'>WAITING</span>
+          <div className='event-state' style={{borderBottom: `8px solid ${state.color}`}}>
+            <span className='state-tip'>{state.value}</span>
           </div>
         }
       </div>
