@@ -2,6 +2,7 @@
  * 运行时配置文件，可以在这里扩展运行时的能力，比如修改路由、修改 render 方法等。
  * https://umijs.org/zh/guide/runtime-config.html#%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F
  */
+ import 'antd/dist/antd.css';
 
  import 'antd/dist/antd.css'
 
