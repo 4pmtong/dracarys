@@ -95,6 +95,9 @@ class EventPage extends React.Component {
                       );
                     })()}
                   </div>
+                  <div className="event-location">
+                    {event.venue || 'XXX'}
+                  </div>
                   <div className="wrap-details">
                     <div className="event-details">
                       {event.num_of_registered || 'xx'} Sailor{event.num_of_registered && event.num_of_registered > 1 && 's'} are going
