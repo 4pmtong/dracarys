@@ -24,7 +24,7 @@ import {
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 
-const submitValues = ['name', 'abstract', 'intro', 'event_start_time', 'event_end_time', 'apply_start_time', 'apply_end_time', 'quota', 'lucky_quota', 'venue', 'contact', 'contact_email', 'image_url', 'keyword']
+const submitValues = ['name', 'abstract', 'intro', 'event_start_time', 'event_end_time', 'apply_start_time', 'apply_end_time', 'quota', 'lucky_quota', 'venue', 'contact', 'contact_email', 'image_url', 'keyword', 'pax']
 
 const openNotificationWithIcon = (type, message, description) => {
   notification[type]({
@@ -73,14 +73,18 @@ class RegistrationForm extends React.Component {
           ...pick(values, submitValues),
           ...!values.quota && { quota: 0 },
           ...!values.lucky_quota && { lucky_quota: 0 },
+          ...!values.pax && { pax: 0 },
           ...!values.image_url && { image_url: '' },
           event_start_time: moment(values.eventTime[0]).unix(),
           event_end_time: moment(values.eventTime[0]).unix(),
           apply_start_time: moment(values.applyTime[0]).unix(),
           apply_end_time:moment(values.applyTime[0]).unix(),
         }).then((data) => {
-          // TODO: Jump to edit page
-          router.replace('/admin');
+          if(!data.message) {
+            router.replace('/admin');
+          } else {
+            openNotificationWithIcon('error', `Failed to create event ${values.name}`, data.message);
+          }
         }).catch(err => {
           openNotificationWithIcon('error', `Failed to create event ${values.name}`, err);
         });
@@ -89,8 +93,6 @@ class RegistrationForm extends React.Component {
   };
 
   onBack = e => {
-    // TODO: goback
-    // window.location.href = '/';
     router.replace('/admin');
   }
 
@@ -192,7 +194,7 @@ class RegistrationForm extends React.Component {
             }
           >
             <Col span={colSpan}>
-            {getFieldDecorator('num_of_register', {
+            {getFieldDecorator('quota', {
               rules: [
                 {
                   type: 'number',
@@ -216,6 +218,29 @@ class RegistrationForm extends React.Component {
           >
             <Col span={colSpan}>
             {getFieldDecorator('lucky_quota', {
+              rules: [
+                {
+                  type: 'number',
+                  min: 0,
+                  message: 'Only numbers greater than 0 accepted!',
+                },
+              ],
+            })(<InputNumber placeholder="0" />)}
+            </Col>
+          </Form.Item>
+          {/* pax */}
+          <Form.Item
+            label={
+              <span>
+                Pax&nbsp;
+                <Tooltip title="How many extra friends & family do you allow your participants to invite">
+                  <Icon type="question-circle-o" />
+                </Tooltip>
+              </span>
+            }
+          >
+            <Col span={colSpan}>
+            {getFieldDecorator('pax', {
               rules: [
                 {
                   type: 'number',
@@ -359,7 +384,11 @@ Example: <b>bold</b> event information`} autosize />)}
                               apply_start_time: moment(values.applyTime[0]).unix(),
                               apply_end_time:moment(values.applyTime[0]).unix(),
                             }).then((data) => {
-                              openNotificationWithIcon('success', `Event ${values.name} updated.`, '');
+                              if(data.message) {
+                                openNotificationWithIcon('error', `Failed to update event ${values.name}`, data.message);
+                              } else {
+                                openNotificationWithIcon('success', `Event ${values.name} updated.`, '');
+                              }
                             }).catch(err => {
                               openNotificationWithIcon('error', `Failed to update event ${values.name}`, err);
                             });
@@ -374,9 +403,12 @@ Example: <b>bold</b> event information`} autosize />)}
                       onClick={(e) => {
                         e.preventDefault();
                         Store.deleteEvent(this.state.eid).then((data) => {
-                          openNotificationWithIcon('success', `Event deleted.`, '');
-                          // TODO: Jump to edit page
-                          router.replace('/admin');
+                          if(data.message) {
+                            openNotificationWithIcon('error', `Failed to delete event`, data.message);
+                          } else {
+                            openNotificationWithIcon('success', `Event deleted.`, '');
+                            router.replace('/admin');
+                          }
                         }).catch(err => {
                           openNotificationWithIcon('error', `Failed to delete event`, err);
                         });

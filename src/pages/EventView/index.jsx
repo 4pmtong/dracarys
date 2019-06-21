@@ -102,7 +102,7 @@ class EventPage extends React.Component {
                     </div>
                     {event.lucky_quota && (
                       <div className="event-details">
-                        {event.lucky_quota} Lucky Draw Chance{event.lucky_quota && event.lucky_quota > 1 && 's'}
+                        {event.lucky_quota} Lucky Draw Chance{event.lucky_quota && event.lucky_quota > 1 && 's'}🎉
                       </div>
                     )}
                   </div>
