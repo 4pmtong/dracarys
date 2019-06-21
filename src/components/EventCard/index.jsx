@@ -27,7 +27,7 @@ export default class EventCard extends React.Component {
   }
 
   render() {
-    const { event, onDelete, onEdit, state } = this.props;
+    const { event, onEdit, state } = this.props;
     const allMembers = event.num_of_register + event.num_of_in_queue;
 
     return (
@@ -71,7 +71,7 @@ export default class EventCard extends React.Component {
 
         <div className='action-list'>
           {onEdit && <div className='icon edit' onClick={() => { onEdit(event) }}><Icon type="form" /></div>}
-          {onDelete && <div className='icon delete' onClick={() => { onDelete(event) }}><Icon type="delete" /></div>}
+          {/* {onDelete && <div className='icon delete' onClick={() => { onDelete(event) }}><Icon type="delete" /></div>} */}
         </div>
 
         {

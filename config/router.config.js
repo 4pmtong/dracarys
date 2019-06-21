@@ -50,6 +50,11 @@ export default [
         name: 'myEvents',
         component: './MyEvents',
       },
+      {
+        path: '/admin',
+        name: 'admin',
+        component: './Admin',
+      },
     ],
   },
 
