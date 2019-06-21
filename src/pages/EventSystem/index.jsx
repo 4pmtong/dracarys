@@ -3,19 +3,44 @@ import axios from 'axios';
 
 import './index.scss';
 // import { formatMessage } from 'umi-plugin-locale';
-import EventCard from '../../components/EventCard';
+import EventBox from './components/EventBox';
 
 export default class HomePage extends React.Component{
   constructor(props) {
     super(props);
 
     this.state = {
-      allEvents: []
+      allEvents: [],
+      sortEvents: {},
     }
   }
 
   componentDidMount() {
     this.getAllEvents();
+  }
+
+  getSortEvents(allEvents) {
+    const sortEvents = {};
+    allEvents.map((event) => {
+      const eventDate = new Date(event.event_start_time);
+      const year = eventDate.getFullYear();
+      const numMonth = eventDate.getMonth();
+      const enMonth = this.monthNumberToString(numMonth);
+      const key = `${enMonth} ${year}`;
+
+      !sortEvents[key] && (sortEvents[key] = []);
+      sortEvents[key].push(event);
+
+      return event;
+    });
+
+    return sortEvents;
+  }
+
+  monthNumberToString(num) {
+    const enMonthArray = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Spt','Oct','Nov','Dec'];
+
+    return enMonthArray[num];
   }
 
   getAllEvents() {
@@ -25,7 +50,8 @@ export default class HomePage extends React.Component{
         console.log(response);
         if (response && response.data && response.data.code === 200) {
           this.setState({
-            allEvents: response.data.data
+            allEvents: response.data.data,
+            sortEvents: this.getSortEvents(response.data.data)
           })
         }
       })
@@ -40,8 +66,18 @@ export default class HomePage extends React.Component{
 
   render() {
     return (
-      <div className='normal'>
-        <EventCard />
+      <div className='home-content'>
+        {
+          Object.keys(this.state.sortEvents).map(eventDate => {
+            return (
+              <EventBox
+                key={eventDate}
+                eventDate={eventDate}
+                events={this.state.sortEvents[eventDate]}
+              />
+            );
+          })
+        }
       </div>
     );
   }
