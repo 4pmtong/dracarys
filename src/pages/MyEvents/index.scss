@@ -1,0 +1,15 @@
+.my-event-content {
+  .my-event-title {
+    padding: 55px 0 44px;
+    font-weight: bold;
+    font-size: 40px;
+    color: rgba(0,0,0,0.85);
+  }
+
+  .my-event-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: -60px;
+  }
+}

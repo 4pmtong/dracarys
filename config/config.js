@@ -11,7 +11,7 @@ const plugins = [
       webpackChunkName: true,
       // loadingComponent: './components/PageLoading/index',
     },
-    title: 'Dractarys',
+    title: 'Dracarys',
     dll: true,
     locale: {
       enable: true,

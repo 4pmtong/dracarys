@@ -14,7 +14,11 @@ export default class EventBox extends React.Component{
         <div className='event-list'>
           {this.props.events.map((event, key) => {
             return (
-              <EventCard key={key} event={event}/>
+              <EventCard
+                key={key}
+                event={event}
+                button='Learn More'
+              />
             );
           })}
         </div>

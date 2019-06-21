@@ -1,20 +1,6 @@
 import mockjs from 'mockjs';
 
 export default {
-  // 支持值为 Object 和 Array
-  'GET /api2/users': { users: ['a', 'b'] },
-
-  // GET POST 可省略
-  '/api2/users/1': { id: 1 },
-
-  // 支持自定义函数，API 参考 express@4
-  'POST /api2/users/create': (req, res) => { res.end('OK'); },
-
-  // 使用 mockjs 等三方库
-  'GET /api2/tags': mockjs.mock({
-    'list|100': [{ name: '@city', 'value|1-100': 50, 'type|0-2': 1 }],
-  }),
-
   // Event detail
   'GET api/event/id': {
     code: 200,
@@ -79,34 +65,6 @@ export default {
       // 4 -> color: red   button: cancel 正在排队
       // 5 -> color: grey  button: ended 落选
     }
-  },
-
-//   // user event
-  'GET api/user/123/events': {
-    data: [{
-      eid: '',
-      name: 'eventName',
-      abstract: '',
-      intro: '',
-      event_start_time: '',
-      apply_start_time: '',
-      apply_end_time: '',
-      quota: 30,
-      lucky_quota: 5,
-      num_of_register: 33,
-      num_of_in_queue: 10,
-      venue: 'Singapore Zoo',
-      contact: '',
-      contact_email: '',
-      image_url: '',
-
-      uid: '',
-      event_state: 1,
-      // 1 -> 未开始 grey join
-      // 2 -> 已开放
-      // 3 -> 已结束  grey ended
-      state: 1,
-    }]
   },
 
   'GET api/admin/123/events': {

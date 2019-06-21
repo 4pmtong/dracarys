@@ -45,6 +45,11 @@ export default [
         name: 'eventsForm',
         component: './EventsForm',
       },
+      {
+        path: '/myevents',
+        name: 'myEvents',
+        component: './MyEvents',
+      },
     ],
   },
 
