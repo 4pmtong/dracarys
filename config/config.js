@@ -40,7 +40,8 @@ export default {
   proxy: {
     // '/api': 'http://localhost:9090',
     //'/api': 'http://10.2.203.47:5000',
-    '/api': 'http://10.22.67.52:5000',
+    //'/api': 'http://10.22.67.52:5000',
+    '/api': 'http://10.22.67.243:5000',
   },
   // chainWebpack: webpackPlugin,
 }

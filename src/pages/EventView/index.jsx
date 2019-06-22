@@ -41,7 +41,7 @@ class EventPage extends React.Component {
 
   componentDidMount() {
     const eid = getQueryVariable('eid');
-    const uid = getUidByCookie();
+    const uid = 4 || getUidByCookie();
     if(eid) {
       Store.getEventDetailByUid(eid, uid).then((data) => {
         if(!data.message) {
@@ -61,10 +61,9 @@ class EventPage extends React.Component {
   }
 
   joinEvent() {
-    const uid = getUidByCookie();
+    const uid = 4 || getUidByCookie();
     Store.joinEventByUid(this.state.event, this.state.eid, uid).then((data) => {
       if(!data.message) {
-        console.log(data.data)
         this.setState({
           event: data.data,
           button: this.getButtonState(data.data),
@@ -78,7 +77,7 @@ class EventPage extends React.Component {
   }
 
   cancelEvent() {
-    const uid = getUidByCookie();
+    const uid = 4 || getUidByCookie();
     Store.deleteEventByUid(this.state.event, this.state.eid, uid).then((data) => {
       if(!data.message) {
         console.log(data.data)
@@ -188,7 +187,7 @@ class EventPage extends React.Component {
                   </div>
                   <div className="wrap-details">
                     <div className="event-details">
-                      {allMembers || 'xx'} Sailor{allMembers > 1 && 's'} are going
+                      {allMembers || 0} Sailor{allMembers > 1 && 's'} are going
                     </div>
                     <div className="event-details-red">
                       {`${leftMembers > 0 ? leftMembers : 0}`} Spot{leftMembers > 1 && 's'} left!
@@ -244,10 +243,13 @@ class EventPage extends React.Component {
               }
               <Row className="blackFont">
                 {this.state.statusOn && (
-                  <Alert closable className="alert" message={(() => {
+                  <Alert className="alert" message={(() => {
                     switch(event.option) {
                       case 1:
                         return 'Event is not available for registration.';
+                      case 3:
+                      case 4:
+                        return 'Event cancelled';
                       case 5:
                         return 'You have successfully joined the event';
                       case 6:
@@ -272,13 +274,20 @@ class EventPage extends React.Component {
                   className="submit"
                   type="primary"
                   block
-                  disabled={this.state.button.disabled}
+                  disabled={this.state.button.disabled || this.state.statusOn}
                   style={{
                     color: '#fff',
                     backgroundColor: this.state.button.bgColor,
                     border: `1px solid ${this.state.button.bgColor}`
                   }}
                   onClick={() => {
+                    this.setState({
+                      statusOn: true,
+                    }, () => {
+                      setTimeout(() => {this.setState({
+                        statusOn: false,
+                      })}, 3000);
+                    });
                     if (this.state.event.option === 1) return;
 
                     if (this.state.event.option === 3 || this.state.event.option === 4) {
