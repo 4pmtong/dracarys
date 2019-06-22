@@ -48,7 +48,7 @@ export default class EventCard extends React.Component {
             <div className='detail'>
               <h5 className='event-name'>{event.name}</h5>
               <p className='event-time'>
-                {`${dayjs(event.event_start_time).format('ddd, MMM DD')}`}
+                {`${dayjs(event.event_start_time*1000).format('ddd, MMM DD')}`}
               </p>
               <p className='event-venue'>
                 {event.venue}

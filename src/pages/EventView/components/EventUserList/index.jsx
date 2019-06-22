@@ -56,7 +56,7 @@ export default class EventUserList extends React.Component {
       staticUserList.push({
         name: `${item.firstname} ${item.lastname}`,
         email: item.email,
-        joinTime: `${dayjs(item.join_time).format('ddd, MMM DD hh:mm:s')}`,
+        joinTime: `${dayjs(item.join_time*1000).format('ddd, MMM DD hh:mm:s')}`,
         pax: item.pax,
         status: `${item.status === 1 ? 'Joined' : 'Queue'}`
       });
