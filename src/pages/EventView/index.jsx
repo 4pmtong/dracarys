@@ -41,7 +41,7 @@ class EventPage extends React.Component {
 
   componentDidMount() {
     const eid = getQueryVariable('eid');
-    const uid = 4 || getUidByCookie();
+    const uid = getUidByCookie();
     if(eid) {
       Store.getEventDetailByUid(eid, uid).then((data) => {
         if(!data.message) {
@@ -61,7 +61,7 @@ class EventPage extends React.Component {
   }
 
   joinEvent() {
-    const uid = 4 || getUidByCookie();
+    const uid = getUidByCookie();
     Store.joinEventByUid(this.state.event, this.state.eid, uid).then((data) => {
       if(!data.message) {
         this.setState({
@@ -77,7 +77,7 @@ class EventPage extends React.Component {
   }
 
   cancelEvent() {
-    const uid = 4 || getUidByCookie();
+    const uid = getUidByCookie();
     Store.deleteEventByUid(this.state.event, this.state.eid, uid).then((data) => {
       if(!data.message) {
         console.log(data.data)
