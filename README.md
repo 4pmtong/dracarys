@@ -15,4 +15,4 @@ $ npm run start # OR yarn start
 $ npm run build # OR yarn build
 ```
 
-Thank you Daphne, Jingxi, Laura！Hope we'll have the opportunity to cooperate again in the future!11
+Thank you Daphne, Jingxi, Laura！Hope we'll have the opportunity to cooperate again in the future!
