@@ -1,6 +1,6 @@
-# my-umi
+# Dracarys
 
-> Example of dashboard with umi + dva + react
+> A demo for hackathon 2019
 
 ## Getting Started
 
@@ -14,3 +14,5 @@ $ npm run start # OR yarn start
 # Build and deploy
 $ npm run build # OR yarn build
 ```
+
+Thank you Daphne, Jingxi, Laura！Hope we'll have the opportunity to cooperate again in the future!11
